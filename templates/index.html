@@ -1,0 +1,20 @@
+[200~cat > templates/index.html << 'EOF'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Coach Bot</title>
+</head>
+<body>
+  <h1>Pull Coaches</h1>
+  <form method="post">
+    {% for t in titles %}
+      <label>
+        <input type="checkbox" name="title" value="{{t}}">
+        {{t}}
+      </label><br>
+    {% endfor %}
+    <button type="submit">Start</button>
+  </form>
+</body>
+</html>
