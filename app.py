@@ -12,8 +12,14 @@ ACCOUNTS       = [
 ]
 account_cycle = itertools.cycle(ACCOUNTS)
 GENERIC_SUBJECT = os.getenv("GENERIC_EMAIL_SUBJECT")
-with open(os.getenv("GENERIC_EMAIL_BODY_PATH"), 'r') as f:
+from dotenv import load_dotenv
+load_dotenv()
+
+body_path = os.getenv("GENERIC_EMAIL_BODY_PATH", "templates/generic_body.html")
+
+with open(body_path, 'r') as f:
     GENERIC_BODY = f.read()
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
