@@ -1,46 +1,86 @@
-[{% extends "layout.html" %}
-{% block content %}
-<div class="row justify-content-center">
-  <div class="col-lg-6">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Coach Onboarding Assistant</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bs-primary: #0052cc;
+      --bs-secondary: #ffffff;
+      --bs-accent: #ff7f0f;
+    }
+    body { background: var(--bs-secondary); }
+    .navbar { background-color: var(--bs-primary); }
+    .navbar-brand, .nav-link { color: var(--bs-secondary) !important; }
+    .main-content {
+      min-height: calc(100vh - 56px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .card-header-primary { background-color: var(--bs-primary); color: white; }
+    .card-header-secondary { background-color: var(--bs-accent); color: white; }
+  </style>
+</head>
+<body>
 
-    <div class="card mb-4 shadow-sm">
-      <div class="card-header bg-primary text-white">
-        Import Coaches via CSV
-      </div>
-      <div class="card-body">
-        <form method="post" action="/import" enctype="multipart/form-data">
-          <div class="mb-3">
-            <input class="form-control" type="file" name="csv_file" accept=".csv">
-          </div>
-          <button class="btn btn-primary w-100">Upload & Sync</button>
-        </form>
-      </div>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/">Coach Onboarding Assistant</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navmenu"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navmenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/coaches">Coaches</a></li>
+        <li class="nav-item"><a class="nav-link" href="/activity">Activity</a></li>
+      </ul>
     </div>
+  </div>
+</nav>
 
-    <div class="card shadow-sm">
-      <div class="card-header bg-secondary text-white">
-        Search Coaches via Apollo
+<div class="main-content">
+  <div class="container">
+    <div class="row justify-content-center gy-4">
+
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header card-header-primary">Import Coaches via CSV</div>
+          <div class="card-body">
+            <form method="post" action="/import" enctype="multipart/form-data">
+              <input class="form-control mb-3" type="file" name="csv_file" accept=".csv">
+              <button class="btn btn-primary w-100">Upload & Sync</button>
+            </form>
+          </div>
+        </div>
       </div>
-      <div class="card-body">
-        <form method="post" action="/search">
-          <div class="mb-3">
-            <label class="form-label">Specialties</label>
-            <input class="form-control" name="specialties" placeholder="Leadership, Career">
+
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header card-header-secondary">Search Coaches via Apollo</div>
+          <div class="card-body">
+            <form method="post" action="/search">
+              <div class="mb-3">
+                <input class="form-control" name="specialties" placeholder="Specialties (Leadership, Career)">
+              </div>
+              <div class="mb-3">
+                <input class="form-control" name="location" placeholder="Location (City, Country)">
+              </div>
+              <div class="mb-3">
+                <input class="form-control" type="number" name="experience" min="0"
+                       placeholder="Min Experience (years)">
+              </div>
+              <button class="btn btn-secondary w-100">Fetch & Analyze</button>
+            </form>
           </div>
-          <div class="mb-3">
-            <label class="form-label">Location</label>
-            <input class="form-control" name="location" placeholder="City, Country">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Min Experience (years)</label>
-            <input class="form-control" type="number" name="experience" min="0">
-          </div>
-          <button class="btn btn-secondary w-100">Fetch & Analyze</button>
-        </form>
+        </div>
       </div>
+
     </div>
-
   </div>
 </div>
-{% endblock %}
-]
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
