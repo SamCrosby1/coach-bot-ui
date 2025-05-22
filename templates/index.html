@@ -1,89 +1,47 @@
-<!doctype html>
-<!-- ★★★★★ LOADED NEW TEMPLATE ★★★★★ -->
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+{% extends "layout.html" %}
+{% block content %}
 
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-F2Qa+S6t7fn+yU5qR+Z6zO6GkEoS1JFyd1N2VFvV5E7rkTRGSJHBmEby8zk2wssJ"
-    crossorigin="anonymous">
-
-  <title>Coach Onboarding Assistant</title>
-</head>
-<body class="bg-light">
-
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0052cc;">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center" href="/">
-      <span>Coach Onboarding Assistant</span>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navmenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navmenu">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="/coaches">Coaches</a></li>
-        <li class="nav-item"><a class="nav-link" href="/activity">Activity</a></li>
-      </ul>
-    </div>
+<h2 class="mb-4 text-primary">Import Coaches via CSV</h2>
+<form method="post" enctype="multipart/form-data" class="mb-5">
+  <div class="input-group mb-3">
+    <input type="file" name="csv_file" class="form-control" accept=".csv">
+    <button class="btn btn-primary">Upload & Sync</button>
   </div>
-</nav>
+</form>
 
-<main class="d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 56px);">
-  <div class="container py-5">
-    <div class="row g-4 justify-content-center">
-
-      <div class="col-md-5">
-        <div class="card shadow">
-          <div class="card-header bg-primary text-white">
-            Import Coaches via CSV
-          </div>
-          <div class="card-body">
-            <form method="post" action="/import" enctype="multipart/form-data">
-              <input type="file" name="csv_file" class="form-control mb-3" accept=".csv">
-              <button class="btn btn-primary w-100">Upload &amp; Sync</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-5">
-        <div class="card shadow">
-          <div class="card-header bg-warning text-dark">
-            Search Coaches via Apollo
-          </div>
-          <div class="card-body">
-            <form method="post" action="/search">
-              <div class="mb-3">
-                <input name="specialties" class="form-control" placeholder="Specialties (Leadership, Career)">
-              </div>
-              <div class="mb-3">
-                <input name="location" class="form-control" placeholder="Location (City, Country)">
-              </div>
-              <div class="mb-3">
-                <input type="number" name="experience" min="0"
-                       class="form-control" placeholder="Min Experience (years)">
-              </div>
-              <button class="btn btn-warning w-100">Fetch &amp; Analyze</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-    </div>
+<h2 class="mb-4 text-warning">Search Coaches via Apollo</h2>
+<form method="post" class="mb-5">
+  <div class="mb-3">
+    <input name="specialties" class="form-control" placeholder="Specialties (Leadership, Career)">
   </div>
-</main>
+  <div class="mb-3">
+    <input name="location" class="form-control" placeholder="Location (City, Country)">
+  </div>
+  <div class="mb-3">
+    <input type="number" name="experience" class="form-control" placeholder="Min Experience (years)" min="0">
+  </div>
+  <button class="btn btn-warning">Fetch & Analyze</button>
+</form>
 
-<!-- Bootstrap JS bundle -->
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-QF+SxQZTeeHTS2FJ5jIOFgaDnzbGFIE/1T+Wc8PZtn7U8UZZtI5tLwbxA0ZsuN4u"
-  crossorigin="anonymous"></script>
-</body>
-</html>
+<hr>
+
+<h2 class="mb-3">Coaches</h2>
+<table class="table table-striped">
+  <thead><tr><th>Name</th><th>Email</th></tr></thead>
+  <tbody>
+    {% for coach in [] %}  {# replace [] with real data #}
+    <tr><td>{{ coach.first_name }} {{ coach.last_name }}</td><td>{{ coach.email }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2 class="mb-3">Email Preview</h2>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Subject: {{ generic_subject or "…" }}</h5>
+    <p class="card-text">{{ generic_body or "Your personalized intro will appear here." }}</p>
+    <button class="btn btn-success">Send Emails</button>
+  </div>
+</div>
+
+{% endblock %}
