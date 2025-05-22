@@ -29,8 +29,6 @@ with open(body_path, 'r') as f:
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        return redirect(url_for('coaches_page'))
     return render_template('index.html')
 
 
