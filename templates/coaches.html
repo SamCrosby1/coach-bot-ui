@@ -4,6 +4,7 @@
 {% block content %}
   <h1 class="text-2xl font-semibold text-primary mb-6">Coaches</h1>
 
+  <!-- Coaches Grid -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     {% for coach in coaches %}
       <div class="bg-white shadow rounded-2xl p-4 hover:shadow-md">
@@ -13,8 +14,12 @@
         {% endif %}
         <h2 class="text-lg font-semibold text-gray-800">{{ coach.name }}</h2>
         <p class="text-sm text-gray-500">{{ coach.email }}</p>
-        <button data-coach-id="{{ coach.id }}"
-                class="mt-4 w-full py-2 px-4 bg-primary text-white rounded-lg hover:bg-primary/90 coach-details-btn">
+        <button
+          data-coach-id="{{ coach.id }}"
+          data-coach-name="{{ coach.name }}"
+          data-coach-email="{{ coach.email }}"
+          class="mt-4 w-full py-2 px-4 bg-primary text-white rounded-lg hover:bg-primary/90 coach-details-btn"
+        >
           View Details
         </button>
       </div>
@@ -23,6 +28,62 @@
     {% endfor %}
   </div>
 
-  <!-- You can add pagination controls here if needed -->
-{% endblock %}
+  <!-- Slide-in Coach Detail Modal -->
+  <div id="coach-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+    <div id="coach-panel"
+         class="absolute right-0 top-0 h-full w-full md:w-1/3 bg-white shadow-lg
+                transform translate-x-full transition-transform duration-300 flex flex-col">
+      <div class="p-6 flex justify-between items-center border-b">
+        <h2 id="modal-coach-name" class="text-xl font-semibold text-gray-800"></h2>
+        <button id="modal-close" class="text-2xl text-gray-500 hover:text-gray-700">&times;</button>
+      </div>
+      <div id="modal-coach-details" class="p-6 overflow-y-auto flex-grow">
+        <!-- JS will inject more coach details here -->
+      </div>
+    </div>
+  </div>
 
+  <!-- Modal Toggle Script -->
+  <script>
+    // Element shortcuts
+    const modalBg    = document.getElementById('coach-modal');
+    const modalPanel = document.getElementById('coach-panel');
+    const nameEl     = document.getElementById('modal-coach-name');
+    const detailsEl  = document.getElementById('modal-coach-details');
+    const closeBtn   = document.getElementById('modal-close');
+    const detailBtns = document.querySelectorAll('.coach-details-btn');
+
+    // Open modal when any "View Details" is clicked
+    detailBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Grab data from button
+        const name  = btn.dataset.coachName;
+        const email = btn.dataset.coachEmail;
+
+        // Populate modal
+        nameEl.textContent = name;
+        detailsEl.innerHTML = `
+          <p class="mb-2"><strong>Email:</strong> ${email}</p>
+          <!-- Add more fields as desired -->
+        `;
+
+        // Show backdrop & slide panel in
+        modalBg.classList.remove('hidden');
+        modalPanel.classList.replace('translate-x-full', 'translate-x-0');
+      });
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', () => {
+      modalPanel.classList.replace('translate-x-0', 'translate-x-full');
+      setTimeout(() => modalBg.classList.add('hidden'), 300);
+    });
+
+    // Also close if you click outside the panel
+    modalBg.addEventListener('click', e => {
+      if (e.target === modalBg) {
+        closeBtn.click();
+      }
+    });
+  </script>
+{% endblock %}
