@@ -1,88 +1,46 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>CoachBot Dashboard</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    :root {
-      --bs-primary: #0052cc;      /* Deep Blue */
-      --bs-secondary: #ffffff;    /* White */
-      --bs-accent: #ff7f0f;       /* Orange accent */
-    }
-    .navbar, .btn-accent {
-      background-color: var(--bs-primary) !important;
-    }
-    .btn-accent {
-      color: var(--bs-secondary);
-      border-color: var(--bs-accent);
-      background-color: var(--bs-accent);
-    }
-    .table-placeholder {
-      color: #666;
-      text-align: center;
-      padding: 2rem;
-      border: 2px dashed #ccc;
-      border-radius: .5rem;
-      background: #fafafa;
-    }
-  </style>
-</head>
-<body class="bg-light">
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand text-white" href="#">CoachBot</a>
-    </div>
-  </nav>
+cat > templates/index.html << 'EOF'
+{% extends "layout.html" %}
+{% block content %}
 
-  <div class="container my-5">
-    <div class="row">
-      <!-- Sidebar / Controls -->
-      <div class="col-lg-4 mb-4">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h4 class="card-title text-primary mb-3">Import Coaches</h4>
-            <!-- CSV Upload -->
-            <div class="mb-3">
-              <label for="csvFile" class="form-label">Upload CSV</label>
-              <input class="form-control" type="file" id="csvFile" accept=".csv">
-            </div>
-            <hr>
-            <h5 class="text-primary">Or</h5>
-            <!-- Apollo API Parameters -->
-            <form id="apiParamsForm">
-              <div class="mb-3">
-                <label for="jobTitles" class="form-label">Job Titles</label>
-                <input type="text" class="form-control" id="jobTitles" placeholder="e.g. Leadership Coach, Career Coach">
-                <div class="form-text">Comma-separated list of specialties.</div>
-              </div>
-              <button type="submit" class="btn btn-primary w-100 mb-2">Fetch from Apollo</button>
-              <button type="button" class="btn btn-accent w-100" id="syncBtn">Sync & Analyze</button>
-            </form>
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">Import Coaches via CSV</div>
+      <div class="card-body">
+        <form method="post" action="/import" enctype="multipart/form-data">
+          <div class="mb-3">
+            <input class="form-control" type="file" name="csv_file" accept=".csv">
           </div>
-        </div>
-      </div>
-
-      <!-- Main Content / Table -->
-      <div class="col-lg-8">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h4 class="card-title text-primary mb-3">Coach List</h4>
-            <!-- Placeholder for dynamic table -->
-            <div id="coachTable" class="table-placeholder">
-              No coaches loaded.<br>
-              Upload a CSV or fetch via Apollo to display profiles here.
-            </div>
-          </div>
-        </div>
+          <button class="btn btn-outline-primary w-100">Upload & Sync</button>
+        </form>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Placeholder for future JS logic to handle CSV import, API calls, table rendering -->
-</body>
-</html>
+  <div class="col-md-6 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-warning text-white">Search Coaches via Apollo</div>
+      <div class="card-body">
+        <form method="post" action="/search">
+          <div class="mb-3">
+            <label class="form-label">Specialties (comma-separated)</label>
+            <input class="form-control" name="specialties" placeholder="e.g. Leadership, Career">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input class="form-control" name="location" placeholder="City, Country">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Min. Experience (years)</label>
+            <input class="form-control" type="number" name="experience" min="0">
+          </div>
+          <button class="btn btn-outline-warning w-100">Fetch & Analyze</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+EOF
+
