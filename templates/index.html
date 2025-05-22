@@ -1,70 +1,38 @@
 {% extends "layout.html" %}
+{% block title %}Home — Coach Bot{% endblock %}
+
 {% block content %}
+  <h1 class="text-3xl font-bold text-primary mb-6">Welcome to Coach Bot</h1>
+  <p class="mb-4">Upload a CSV of coaches or search with custom parameters to begin.</p>
 
-<div class="card shadow-sm">
-  <div class="card-body">
-    <h2 class="section-title">Import Coaches via CSV</h2>
-    <form method="post" enctype="multipart/form-data" class="row g-2 align-items-center">
-      <div class="col-auto flex-grow-1">
-        <input type="file" name="csv_file" class="form-control" accept=".csv">
-      </div>
-      <div class="col-auto">
-        <button class="btn btn-primary">Upload & Sync</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="card shadow-sm">
-  <div class="card-body">
-    <h2 class="section-title">Search Coaches via Apollo</h2>
-    <form method="post" class="row g-3">
-      <div class="col-md-4">
-        <input name="specialties" class="form-control" placeholder="Specialties">
-      </div>
-      <div class="col-md-4">
-        <input name="location" class="form-control" placeholder="Location">
-      </div>
-      <div class="col-md-2">
-        <input type="number" name="experience" class="form-control" placeholder="Min Exp (yrs)" min="0">
-      </div>
-      <div class="col-md-2">
-        <button class="btn btn-warning w-100">Fetch & Analyze</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="card shadow-sm">
-  <div class="card-body">
-    <h2 class="section-title">Coaches</h2>
-    <table class="table table-hover mb-0">
-      <thead class="table-light">
-        <tr><th>Name</th><th>Email</th></tr>
-      </thead>
-      <tbody>
-        {% for coach in coaches %}
-        <tr>
-          <td>{{ coach.first_name }} {{ coach.last_name }}</td>
-          <td>{{ coach.email }}</td>
-        </tr>
-        {% else %}
-        <tr><td colspan="2" class="text-muted text-center">No coaches loaded</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="card shadow-sm">
-  <div class="card-body">
-    <h2 class="section-title">Email Preview & Send</h2>
-    <h5>Subject: {{ generic_subject or '—' }}</h5>
-    <div class="border rounded p-3 mb-3" style="background:#fff;">
-      {{ generic_body or 'Your personalized intro will appear here.' }}
+  <div class="space-y-6">
+    <!-- CSV Uploader -->
+    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+      <form action="/coaches" method="post" enctype="multipart/form-data">
+        <input type="file" name="csv_file" accept=".csv" class="mb-4" />
+        <button type="submit"
+                class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90">
+          Upload CSV
+        </button>
+      </form>
     </div>
-    <button class="btn btn-success">Send Emails</button>
-  </div>
-</div>
 
+    <!-- Custom Search Form -->
+    <form action="/coaches" method="get" class="space-y-4">
+      <div>
+        <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+        <input type="text" name="location" id="location"
+               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" />
+      </div>
+      <div>
+        <label for="specialty" class="block text-sm font-medium text-gray-700">Specialty</label>
+        <input type="text" name="specialty" id="specialty"
+               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" />
+      </div>
+      <button type="submit"
+              class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-accent/90">
+        Search Coaches
+      </button>
+    </form>
+  </div>
 {% endblock %}

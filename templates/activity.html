@@ -1,14 +1,35 @@
 {% extends "layout.html" %}
+{% block title %}Email Activity — Coach Bot{% endblock %}
+
 {% block content %}
+  <h1 class="text-2xl font-semibold mb-6 text-primary">Email Activity</h1>
 
-<h2>Email Activity</h2>
-<table class="table table-bordered">
-  <thead>
-    <tr><th>To</th><th>Status</th><th>Opened</th><th>Clicked</th></tr>
-  </thead>
-  <tbody id="activity-table-body">
-    <tr><td colspan="4" class="text-center text-muted">No activity yet.</td></tr>
-  </tbody>
-</table>
-
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow rounded-lg">
+      <thead class="bg-primary/10">
+        <tr>
+          <th class="px-6 py-3 text-left text-sm font-medium text-primary">To</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-primary">Status</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-primary">Opened</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-primary">Clicked</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {% for item in activities %}
+          <tr class="hover:bg-primary/5">
+            <td class="px-6 py-4">{{ item.to_email }}</td>
+            <td class="px-6 py-4">{{ item.status }}</td>
+            <td class="px-6 py-4">{{ item.opened }}</td>
+            <td class="px-6 py-4">{{ item.clicked }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+              No activity to show.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}
