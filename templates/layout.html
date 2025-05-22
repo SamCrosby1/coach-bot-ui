@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coach Onboarding Assistant</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body, html { height: 100%; margin: 0; }
+    .hero {
+      background: url('https://source.unsplash.com/1600x900/?globe,world,map') center/cover no-repeat;
+      height: 60vh; position: relative; color: white;
+    }
+    .hero-overlay {position:absolute;top:0;left:0;right:0;bottom:0;
+      background: rgba(0,0,50,0.5);}
+    .hero-content {position:relative;z-index:1;height:100%;
+      display:flex;align-items:center;justify-content:center;
+      flex-direction:column;}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand text-primary" href="/">Coach Onboarding Assistant</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navmenu"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="navmenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/coaches">Coaches</a></li>
+        <li class="nav-item"><a class="nav-link" href="/activity">Activity</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content text-center">
+    <h1 class="display-4">Coach Onboarding Assistant</h1>
+    <p class="lead">Import or search coaches, then review and send personalized outreach.</p>
+  </div>
+</div>
+
+<div class="container my-5">
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

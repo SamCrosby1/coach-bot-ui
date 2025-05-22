@@ -67,3 +67,21 @@ def run_batch(titles):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
+
+@app.route('/coaches')
+def coaches_page():
+    return render_template('coaches.html')
+
+@app.route('/activity')
+def activity_page():
+    return render_template('activity.html')
+
+@app.route('/import', methods=['POST'])
+def import_csv():
+    # TODO: handle CSV upload
+    return redirect(url_for('coaches_page'))
+
+@app.route('/search', methods=['POST'])
+def search_apollo():
+    # TODO: handle Apollo search
+    return redirect(url_for('coaches_page'))

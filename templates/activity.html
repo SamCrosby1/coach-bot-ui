@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Email Activity</h2>
+<table class="table table-bordered">
+  <thead>
+    <tr><th>To</th><th>Status</th><th>Opened</th><th>Clicked</th></tr>
+  </thead>
+  <tbody id="activity-table-body">
+    <tr><td colspan="4" class="text-center text-muted">No activity yet.</td></tr>
+  </tbody>
+</table>
+
+{% endblock %}
