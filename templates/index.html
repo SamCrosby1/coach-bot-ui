@@ -1,43 +1,46 @@
-{% extends "layout.html" %}
+[{% extends "layout.html" %}
 {% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
 
-<div class="row">
-  <div class="col-md-6 mb-4">
-    <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">Import Coaches via CSV</div>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-primary text-white">
+        Import Coaches via CSV
+      </div>
       <div class="card-body">
         <form method="post" action="/import" enctype="multipart/form-data">
           <div class="mb-3">
             <input class="form-control" type="file" name="csv_file" accept=".csv">
           </div>
-          <button class="btn btn-outline-primary w-100">Upload & Sync</button>
+          <button class="btn btn-primary w-100">Upload & Sync</button>
         </form>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-6 mb-4">
     <div class="card shadow-sm">
-      <div class="card-header bg-warning text-white">Search Coaches via Apollo</div>
+      <div class="card-header bg-secondary text-white">
+        Search Coaches via Apollo
+      </div>
       <div class="card-body">
         <form method="post" action="/search">
           <div class="mb-3">
-            <label class="form-label">Specialties (comma-separated)</label>
-            <input class="form-control" name="specialties" placeholder="e.g. Leadership, Career">
+            <label class="form-label">Specialties</label>
+            <input class="form-control" name="specialties" placeholder="Leadership, Career">
           </div>
           <div class="mb-3">
             <label class="form-label">Location</label>
             <input class="form-control" name="location" placeholder="City, Country">
           </div>
           <div class="mb-3">
-            <label class="form-label">Min. Experience (years)</label>
+            <label class="form-label">Min Experience (years)</label>
             <input class="form-control" type="number" name="experience" min="0">
           </div>
-          <button class="btn btn-outline-warning w-100">Fetch & Analyze</button>
+          <button class="btn btn-secondary w-100">Fetch & Analyze</button>
         </form>
       </div>
     </div>
+
   </div>
 </div>
-
 {% endblock %}
+]
