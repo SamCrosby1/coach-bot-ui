@@ -1,38 +1,65 @@
+<!-- templates/index.html -->
 {% extends "layout.html" %}
-{% block title %}Home — Coach Bot{% endblock %}
+{% block title %}Home — Coach Onboarding Tool{% endblock %}
 
 {% block content %}
-  <h1 class="text-3xl font-bold text-primary mb-6">Welcome to Coach Bot</h1>
-  <p class="mb-4">Upload a CSV of coaches or search with custom parameters to begin.</p>
+<div class="relative flex flex-col lg:flex-row items-center justify-between bg-gradient-to-r from-primary/20 to-white rounded-2xl overflow-hidden shadow-lg">
+  <!-- Left panel: search -->
+  <div class="w-full lg:w-1/2 p-12">
+    <h1 class="text-4xl font-bold text-primary mb-4">Find Your Next Coach</h1>
+    <p class="text-lg text-gray-700 mb-8">
+      Upload a CSV or search by location to discover coaches and start your outreach.
+    </p>
 
-  <div class="space-y-6">
-    <!-- CSV Uploader -->
-    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-      <form action="/coaches" method="post" enctype="multipart/form-data">
-        <input type="file" name="csv_file" accept=".csv" class="mb-4" />
+    <div class="space-y-6">
+      <!-- CSV Uploader -->
+      <div class="border-2 border-dashed border-gray-300 rounded-lg p-6">
+        <form action="/" method="post" enctype="multipart/form-data">
+          <input type="file"
+                 name="csv_file"
+                 accept=".csv"
+                 class="block w-full text-gray-600 mb-4"
+          />
+          <button type="submit"
+                  class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition">
+            Upload CSV
+          </button>
+        </form>
+      </div>
+
+      <!-- Location Search -->
+      <form action="/" method="get" class="flex space-x-4">
+        <input type="text"
+               name="location"
+               placeholder="Enter location"
+               class="flex-grow border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+        />
         <button type="submit"
-                class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90">
-          Upload CSV
+                class="bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent/90 transition">
+          Search
         </button>
       </form>
     </div>
-
-    <!-- Custom Search Form -->
-    <form action="/coaches" method="get" class="space-y-4">
-      <div>
-        <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-        <input type="text" name="location" id="location"
-               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" />
-      </div>
-      <div>
-        <label for="specialty" class="block text-sm font-medium text-gray-700">Specialty</label>
-        <input type="text" name="specialty" id="specialty"
-               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" />
-      </div>
-      <button type="submit"
-              class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-accent/90">
-        Search Coaches
-      </button>
-    </form>
   </div>
+
+  <!-- Right panel: results -->
+  <div class="w-full lg:w-1/2 p-12 bg-white">
+    {% if coaches %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {% for coach in coaches %}
+          <div class="p-6 bg-primary/10 rounded-2xl shadow hover:shadow-md transition">
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">{{ coach.name }}</h2>
+            <p class="text-sm text-gray-600 mb-4">{{ coach.email }}</p>
+            <a href="#"
+               class="inline-block text-accent font-medium hover:underline">
+              View Details →
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-500 italic">No coaches yet—upload a CSV or perform a search to see results here.</p>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
