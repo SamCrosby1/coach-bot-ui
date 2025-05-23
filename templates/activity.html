@@ -1,9 +1,8 @@
 {% extends "layout.html" %}
-{% block title %}Email Activity — Coach Bot{% endblock %}
+{% block title %}Email Hub — Activity{% endblock %}
 
 {% block content %}
-  <h1 class="text-2xl font-semibold mb-6 text-primary">Email Activity</h1>
-
+  <h1 class="text-2xl font-semibold text-primary mb-6">Email Activity</h1>
   <div class="overflow-x-auto">
     <table class="min-w-full bg-white shadow rounded-lg">
       <thead class="bg-primary/10">
@@ -15,19 +14,19 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        {% for item in activities %}
-          <tr class="hover:bg-primary/5">
-            <td class="px-6 py-4">{{ item.to_email }}</td>
-            <td class="px-6 py-4">{{ item.status }}</td>
-            <td class="px-6 py-4">{{ item.opened }}</td>
-            <td class="px-6 py-4">{{ item.clicked }}</td>
-          </tr>
+        {% for act in activities %}
+        <tr class="hover:bg-primary/5">
+          <td class="px-6 py-4">{{ act.to_email }}</td>
+          <td class="px-6 py-4">{{ act.status }}</td>
+          <td class="px-6 py-4">{{ act.opened }}</td>
+          <td class="px-6 py-4">{{ act.clicked }}</td>
+        </tr>
         {% else %}
-          <tr>
-            <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-              No activity to show.
-            </td>
-          </tr>
+        <tr>
+          <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+            No activity to show.
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>

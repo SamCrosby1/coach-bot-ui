@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Coach Onboarding Tool{% endblock %}</title>
 
-  <!-- Tailwind CSS via CDN -->
+  <!-- Tailwind CDN + custom colors -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -20,13 +20,11 @@
     }
   </script>
 </head>
-<body class="min-h-screen flex flex-col
-             bg-gradient-to-br from-primary/10 via-white to-accent/10
-             text-gray-900">
+<body class="min-h-screen flex flex-col bg-gradient-to-br from-primary/10 via-white to-accent/10 text-gray-900">
 
   <!-- Navbar -->
   <nav class="backdrop-blur-sm bg-white bg-opacity-50 border-b border-gray-200">
-    <div class="container mx-auto px-6 py-4 flex items-center justify-center space-x-8">
+    <div class="container mx-auto px-6 py-4 flex justify-center space-x-8">
       <a href="/dashboard"
          class="px-8 py-3 bg-accent text-white text-xl font-semibold rounded-lg hover:bg-accent/90 transition">
         Dashboard
@@ -42,10 +40,8 @@
     </div>
   </nav>
 
-  <!-- Main content area -->
-  <main class="container mx-auto px-6 py-8 flex-grow">
-    {% block content %}{% endblock %}
-  </main>
+  <!-- Main content -->
+  <main class="container mx-auto px-6 py-8 flex-grow">{% block content %}{% endblock %}</main>
 
   <!-- Footer -->
   <footer class="backdrop-blur-sm bg-white bg-opacity-50 text-center py-4 border-t border-gray-200">
