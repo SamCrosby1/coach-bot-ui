@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 {% block title %}Email Hub — Activity{% endblock %}
-
 {% block content %}
   <h1 class="text-2xl font-semibold text-primary mb-6">Email Activity</h1>
   <div class="overflow-x-auto">
@@ -10,22 +9,22 @@
           <th class="px-6 py-3 text-left text-sm font-medium text-primary">To</th>
           <th class="px-6 py-3 text-left text-sm font-medium text-primary">Status</th>
           <th class="px-6 py-3 text-left text-sm font-medium text-primary">Opened</th>
-          <th class="px-6 py-3 text-left text-sm font-medium text-primary">Clicked</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-primary">Bounced</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-primary">Visited CountryNavigator</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        {% for act in activities %}
+        {% for row in activities %}
         <tr class="hover:bg-primary/5">
-          <td class="px-6 py-4">{{ act.to_email }}</td>
-          <td class="px-6 py-4">{{ act.status }}</td>
-          <td class="px-6 py-4">{{ act.opened }}</td>
-          <td class="px-6 py-4">{{ act.clicked }}</td>
+          <td class="px-6 py-4">{{ row.email }}</td>
+          <td class="px-6 py-4">{{ row.status }}</td>
+          <td class="px-6 py-4">{{ row.opened }}</td>
+          <td class="px-6 py-4">{{ row.bounced }}</td>
+          <td class="px-6 py-4">{{ row.visited }}</td>
         </tr>
         {% else %}
         <tr>
-          <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-            No activity to show.
-          </td>
+          <td colspan="5" class="px-6 py-4 text-center text-gray-500">No activity to show.</td>
         </tr>
         {% endfor %}
       </tbody>

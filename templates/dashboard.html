@@ -1,44 +1,76 @@
 {% extends "layout.html" %}
 {% block title %}Dashboard — Coach Onboarding Tool{% endblock %}
-
 {% block content %}
-  <h1 class="text-2xl font-semibold text-primary mb-6">Global Opens Heatmap</h1>
-  <div class="bg-white p-6 rounded-2xl shadow-lg">
-    <div id="globe" class="w-full h-96"></div>
+  <h1 class="text-2xl font-semibold text-primary mb-6">Analytics Dashboard</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    <!-- KPI Cards -->
+    {% for card in metrics %}
+    <div class="bg-white p-6 rounded-2xl shadow-lg">
+      <h2 class="text-lg font-medium text-gray-700 mb-2">{{ card.title }}</h2>
+      <p class="text-3xl font-bold">{{ card.value }}</p>
+    </div>
+    {% endfor %}
   </div>
 
-  <!-- three.js + three-globe -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Globe -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg">
+      <h2 class="text-xl font-medium mb-4">Open Heatmap</h2>
+      <div id="globe" class="w-full h-80"></div>
+    </div>
+    <!-- Chart Trends -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg">
+      <h2 class="text-xl font-medium mb-4">Open/Bounce/Reply/Click Trends</h2>
+      <canvas id="trendChart" class="w-full h-64"></canvas>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
   <script src="https://unpkg.com/three-globe@2.24.9/build/three-globe.min.js"></script>
+
   <script>
-    // Only coaches with open_count >=1
-    const data = {{ coaches|selectattr("open_count", "gt", 0)|list|tojson }};
+    // KPI Cards are server-rendered
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize( window.innerWidth*0.8, window.innerHeight*0.5 );
-    document.getElementById('globe').appendChild(renderer.domElement);
-
-    const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera();
-    camera.aspect = (window.innerWidth*0.8)/(window.innerHeight*0.5);
-    camera.updateProjectionMatrix();
-    camera.position.z = 300;
-
+    // Globe: only coaches with open=1
+    const coords = {{ coaches|selectattr("open_count","eq",1)|list|tojson }};
     const globe = new ThreeGlobe()
-      .pointsData(data)
-      .pointLat('lat')
-      .pointLng('lng')
-      .pointColor(()=>'rgba(29,140,248,0.8)')
-      .pointAltitude(0.01)
+      .pointsData(coords)
+      .pointLat('lat').pointLng('lng')
+      .pointColor(()=>'rgba(62,149,205,0.8)')
+      .pointAltitude(0.02)
       .pointRadius(1.5);
 
-    scene.add(new THREE.AmbientLight(0xffffff));
-    scene.add(globe);
+    const renderer = new THREE.WebGLRenderer({ antialias:true });
+    const width = document.getElementById('globe').offsetWidth;
+    const height= document.getElementById('globe').offsetHeight;
+    renderer.setSize(width, height);
+    document.getElementById('globe').appendChild(renderer.domElement);
 
-    (function animate() {
-      globe.rotation.y += 0.002;
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
-    })();
+    const scene = new THREE.Scene();
+    const camera= new THREE.PerspectiveCamera();
+    camera.aspect=width/height; camera.updateProjectionMatrix(); camera.position.z=300;
+    scene.add(new THREE.AmbientLight(0xffffff), globe);
+
+    (function animate(){ globe.rotation.y+=0.002; renderer.render(scene,camera); requestAnimationFrame(animate); })();
+
+    // Trend Chart
+    const trendData = {{ analytics.trend|tojson }};
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: trendData.map(d=>d.date),
+        datasets: [
+          { label:'Opens',data:trendData.map(d=>d.open),fill:false },
+          { label:'Bounces',data:trendData.map(d=>d.bounce),fill:false },
+          { label:'Replies',data:trendData.map(d=>d.reply),fill:false },
+          { label:'Clicks',data:trendData.map(d=>d.click),fill:false },
+        ]
+      },
+      options:{ responsive:true, interaction:{mode:'index'} }
+    });
   </script>
 {% endblock %}

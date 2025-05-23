@@ -1,36 +1,56 @@
 {% extends "layout.html" %}
 {% block title %}Coach Hub — Coach Onboarding Tool{% endblock %}
-
 {% block content %}
 <div class="flex flex-col lg:flex-row gap-8">
-  <!-- Filters panel -->
+  <!-- Filters -->
   <aside class="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow-lg space-y-6">
     <h2 class="text-2xl font-semibold text-primary">Search & Filters</h2>
     <form action="/" method="post" enctype="multipart/form-data" class="space-y-4">
       <label class="block text-sm font-medium text-gray-700">Upload CSV</label>
-      <input type="file" name="csv_file" accept=".csv" class="block w-full text-gray-600" />
-      <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition">
+      <input type="file" name="csv_file" accept=".csv"
+             class="block w-full text-gray-600" />
+      <button type="submit"
+              class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition">
         Import Coaches
       </button>
     </form>
-
     <form action="/" method="get" class="space-y-4">
       <div>
-        <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-        <input type="text" name="location" id="location"
-               value="{{ request.args.location }}"
-               class="mt-1 block w-full border-gray-300 rounded-md px-3 py-2" />
+        <label class="block text-sm font-medium text-gray-700">Location</label>
+        <input type="text" name="location" value="{{ request.args.location }}"
+               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" />
       </div>
-      <button type="submit" class="w-full bg-accent text-white py-2 rounded-lg hover:bg-accent/90 transition">
-        Search by Location
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Role</label>
+        <input type="text" name="role" value="{{ request.args.role }}"
+               placeholder="e.g. Fitness, Leadership"
+               class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" />
+      </div>
+      <div class="flex space-x-2">
+        <div class="w-1/2">
+          <label class="block text-sm font-medium text-gray-700">Min Rating</label>
+          <input type="number" step="0.1" min="0" max="5" name="min_rating"
+                 value="{{ request.args.min_rating or 0 }}"
+                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" />
+        </div>
+        <div class="w-1/2">
+          <label class="block text-sm font-medium text-gray-700">Min Exp (yrs)</label>
+          <input type="number" min="0" name="min_exp"
+                 value="{{ request.args.min_exp or 0 }}"
+                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" />
+        </div>
+      </div>
+      <button type="submit"
+              class="w-full bg-accent text-white py-2 rounded-lg hover:bg-accent/90 transition">
+        Apply Filters
       </button>
     </form>
   </aside>
 
-  <!-- Coach cards (5 max) -->
+  <!-- Results: paged, 5 per page -->
   <section class="w-full lg:w-2/3 space-y-6">
     {% if coaches %}
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 overflow-y-auto max-h-[32rem]">
+      <div id="coach-list" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {% for coach in coaches %}
           <div class="bg-white shadow rounded-2xl p-6 hover:shadow-md transition">
             <h3 class="text-lg font-semibold text-gray-800">{{ coach.name }}</h3>
@@ -38,13 +58,24 @@
             <p class="text-sm text-gray-500 mb-4">
               {{ coach.experience }} yrs • Rating: {{ coach.rating }}
             </p>
-            <button
-              data-coach-name="{{ coach.name }}"
-              class="w-full py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition coach-details-btn">
+            <button data-name="{{ coach.name }}"
+                    data-email="{{ coach.email }}"
+                    class="w-full py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition coach-details-btn">
               View Details
             </button>
           </div>
         {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-between items-center mt-4">
+        {% if page>1 %}
+          <a href="?{{ qs_prev }}" class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50">Previous</a>
+        {% endif %}
+        <span>Page {{ page }} of {{ total_pages }}</span>
+        {% if page<total_pages %}
+          <a href="?{{ qs_next }}" class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50">Next</a>
+        {% endif %}
       </div>
     {% else %}
       <p class="text-gray-500 italic">No coaches found.</p>
@@ -52,37 +83,40 @@
   </section>
 </div>
 
-<!-- Detail modal (unchanged) -->
+<!-- Modal -->
 <div id="coach-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
-  <div id="coach-panel" class="absolute right-0 top-0 h-full w-full md:w-1/3 bg-white shadow-lg transform translate-x-full transition-transform duration-300 flex flex-col">
+  <div id="coach-panel"
+       class="absolute right-0 top-0 h-full w-full md:w-1/3 bg-white shadow-lg transform translate-x-full transition-transform duration-300 flex flex-col">
     <div class="p-6 flex justify-between items-center border-b">
       <h2 id="modal-coach-name" class="text-xl font-semibold text-gray-800"></h2>
       <button id="modal-close" class="text-2xl text-gray-500 hover:text-gray-700">&times;</button>
     </div>
-    <div id="modal-coach-details" class="p-6 overflow-y-auto flex-grow"></div>
+    <div id="modal-coach-details" class="p-6 overflow-y-auto flex-grow">
+      <!-- will inject role, experience, rating, email -->
+    </div>
   </div>
 </div>
 
 <script>
-  // Modal toggle (same as before)
-  const bg=document.getElementById('coach-modal'),
-        panel=document.getElementById('coach-panel'),
-        nameEl=document.getElementById('modal-coach-name'),
-        detailsEl=document.getElementById('modal-coach-details'),
-        closeBtn=document.getElementById('modal-close');
+  // Modal logic
+  const modalBg = document.getElementById('coach-modal'),
+        panel   = document.getElementById('coach-panel'),
+        nameEl  = document.getElementById('modal-coach-name'),
+        details = document.getElementById('modal-coach-details'),
+        closeBtn= document.getElementById('modal-close');
 
   document.querySelectorAll('.coach-details-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      nameEl.textContent = btn.dataset.coachName;
-      detailsEl.innerHTML = `<p>Email: ${btn.dataset.coachEmail||'N/A'}</p>`;
-      bg.classList.remove('hidden');
+    btn.addEventListener('click', ()=>{
+      nameEl.textContent = btn.dataset.name;
+      details.innerHTML = `<p class="mb-2"><strong>Email:</strong> ${btn.dataset.email}</p>`;
+      modalBg.classList.remove('hidden');
       panel.classList.replace('translate-x-full','translate-x-0');
     });
   });
   closeBtn.onclick = ()=>{
     panel.classList.replace('translate-x-0','translate-x-full');
-    setTimeout(()=>bg.classList.add('hidden'),300);
+    setTimeout(()=>modalBg.classList.add('hidden'),300);
   };
-  bg.addEventListener('click', e=>{ if(e.target===bg) closeBtn.click(); });
+  modalBg.addEventListener('click', e=>{ if(e.target===modalBg) closeBtn.click(); });
 </script>
 {% endblock %}

@@ -2,19 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{% block title %}Coach Onboarding Tool{% endblock %}</title>
-
-  <!-- Tailwind CDN + custom colors -->
+  <!-- Tailwind + custom blues -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            primary: '#1E3A8A',
-            accent:  '#3B82F6'
-          }
+          colors: { primary: '#1E3A8A', accent: '#3B82F6' }
         }
       }
     }
@@ -26,21 +22,21 @@
   <nav class="backdrop-blur-sm bg-white bg-opacity-50 border-b border-gray-200">
     <div class="container mx-auto px-6 py-4 flex justify-center space-x-8">
       <a href="/dashboard"
-         class="px-8 py-3 bg-accent text-white text-xl font-semibold rounded-lg hover:bg-accent/90 transition">
+         class="px-6 py-2 bg-primary text-white text-lg font-semibold rounded-lg hover:bg-primary/90 transition">
         Dashboard
       </a>
       <a href="/"
-         class="px-8 py-3 bg-primary text-white text-xl font-semibold rounded-lg hover:bg-primary/90 transition">
+         class="px-6 py-2 bg-accent text-white text-lg font-semibold rounded-lg hover:bg-accent/90 transition">
         Coach Hub
       </a>
       <a href="/activity"
-         class="px-8 py-3 bg-primary/70 text-white text-xl font-semibold rounded-lg hover:bg-primary/60 transition">
+         class="px-6 py-2 bg-primary/70 text-white text-lg font-semibold rounded-lg hover:bg-primary/60 transition">
         Email Hub
       </a>
     </div>
   </nav>
 
-  <!-- Main content -->
+  <!-- Page Content -->
   <main class="container mx-auto px-6 py-8 flex-grow">{% block content %}{% endblock %}</main>
 
   <!-- Footer -->
