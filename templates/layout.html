@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Coach Bot{% endblock %}</title>
+  <title>{% block title %}Coach Onboarding Tool{% endblock %}</title>
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,17 +20,29 @@
     }
   </script>
 </head>
-<body class="bg-white text-gray-900 min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col
+             bg-gradient-to-br from-primary/10 via-white to-accent/10
+             text-gray-900">
 
   <!-- Navbar -->
-  <nav class="bg-white border-b border-gray-200">
-    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-      <a href="/" class="text-2xl font-semibold text-primary">Coach Bot</a>
-      <ul class="flex space-x-6">
-        <li><a href="/"        class="hover:text-accent">Home</a></li>
-        <li><a href="/coaches" class="hover:text-accent">Coaches</a></li>
-        <li><a href="/activity" class="text-primary font-medium">Activity</a></li>
-      </ul>
+  <nav class="bg-white bg-opacity-50 backdrop-blur-sm border-b border-gray-200">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+      <!-- Logo / Home -->
+      <a href="/" class="text-2xl font-semibold text-primary">
+        Coach Onboarding Tool
+      </a>
+
+      <!-- Centered Hub Buttons -->
+      <div class="space-x-4">
+        <a href="/"
+           class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition">
+          Coach Hub
+        </a>
+        <a href="/activity"
+           class="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 transition">
+          Email Hub
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -40,8 +52,8 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-100 text-center py-4">
-    <p class="text-sm text-gray-500">&copy; 2025 Coach Bot</p>
+  <footer class="bg-white bg-opacity-50 backdrop-blur-sm text-center py-4 border-t border-gray-200">
+    <p class="text-sm text-gray-500">&copy; 2025 Coach Onboarding Tool</p>
   </footer>
 </body>
 </html>
