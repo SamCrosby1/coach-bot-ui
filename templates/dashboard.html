@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard — Coach Onboarding Tool{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-semibold text-primary mb-6">Global Coach Activity</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Globe Panel -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg">
+      <div id="globe-container" class="w-full h-96"></div>
+    </div>
+
+    <!-- Opened Coaches List -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg overflow-y-auto max-h-[24rem]">
+      <h2 class="text-xl font-medium mb-4">Coaches Who Opened Emails</h2>
+      <ul class="space-y-3">
+        {% for c in coaches if c.open_count > 0 %}
+          <li class="p-3 bg-primary/10 rounded-lg">
+            <p class="font-semibold">{{ c.name }}</p>
+            <p class="text-sm text-gray-600">Opened: {{ c.open_count }} times</p>
+          </li>
+        {% else %}
+          <p class="text-gray-500 italic">No opens recorded yet.</p>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- three.js + three-globe -->
+  <script src="https://unpkg.com/three@0.152.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three-globe@2.24.9/build/three-globe.min.js"></script>
+
+  <script>
+    // Data from backend
+    const coachData = {{ coaches|tojson }};
+
+    // Scene setup
+    const Globe = new ThreeGlobe()
+      .hexBinPointWeight('open_count')
+      .hexAltitude(d => d.open_count * 0.001)
+      .hexTopColor(() => 'rgba(62,149,205,0.6)')
+      .hexSideColor(() => 'rgba(62,149,205,0.1)')
+      .pointsData(coachData)
+      .pointLat('lat')
+      .pointLng('lng');
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth*0.45,  window.innerHeight*0.45);
+    document.getElementById('globe-container').appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera();
+    camera.aspect = window.innerWidth*0.45 / (window.innerHeight*0.45);
+    camera.updateProjectionMatrix();
+    camera.position.z = 300;
+
+    const light = new THREE.AmbientLight(0xffffff);
+    scene.add(light);
+    scene.add(Globe);
+
+    (function animate() {
+      Globe.rotation.y += 0.002;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    })();
+  </script>
+{% endblock %}

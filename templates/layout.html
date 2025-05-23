@@ -12,8 +12,8 @@
       theme: {
         extend: {
           colors: {
-            primary: '#1E3A8A',  /* deep blue */
-            accent:  '#3B82F6'    /* light blue */
+            primary: '#1E3A8A',
+            accent:  '#3B82F6'
           }
         }
       }
@@ -26,13 +26,17 @@
 
   <!-- Navbar -->
   <nav class="backdrop-blur-sm bg-white bg-opacity-50 border-b border-gray-200">
-    <div class="container mx-auto px-6 py-4 flex items-center justify-center space-x-6">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-center space-x-8">
+      <a href="/dashboard"
+         class="px-8 py-3 bg-accent text-white text-xl font-semibold rounded-lg hover:bg-accent/90 transition">
+        Dashboard
+      </a>
       <a href="/"
-         class="px-6 py-2 bg-primary text-white text-lg font-medium rounded-lg hover:bg-primary/90 transition">
+         class="px-8 py-3 bg-primary text-white text-xl font-semibold rounded-lg hover:bg-primary/90 transition">
         Coach Hub
       </a>
       <a href="/activity"
-         class="px-6 py-2 bg-accent text-white text-lg font-medium rounded-lg hover:bg-accent/90 transition">
+         class="px-8 py-3 bg-primary/70 text-white text-xl font-semibold rounded-lg hover:bg-primary/60 transition">
         Email Hub
       </a>
     </div>

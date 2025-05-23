@@ -7,92 +7,39 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET','POST'])
 def index():
-    # Parse filters & sorting
-    args = request.values
-    filters = {
-        'location':    args.get('location','').strip(),
-        'specialty':   args.get('specialty','').strip(),
-        'min_exp':     float(args.get('min_exp') or 0),
-        'max_exp':     float(args.get('max_exp') or 999),
-        'min_rating':  float(args.get('min_rating') or 0),
-        'radius':      float(args.get('radius') or 9999),
-        'sort_by':     args.get('sort_by','')
-    }
-    # Load from CSV or Apollo stub
-    if request.method=='POST' and 'csv_file' in request.files:
-        coaches = _parse_csv(request.files['csv_file'])
-    else:
-        coaches = _fetch_coaches_from_apollo(filters)
-
-    # Apply simple in-memory filters & sorting (stub logic)
-    filtered = []
-    for c in coaches:
-        if filters['min_exp'] <= c.get('experience',0) <= filters['max_exp'] \
-        and c.get('rating',0) >= filters['min_rating']:
-            filtered.append(c)
-    if filters['sort_by'] in ('name','rating','experience','distance'):
-        filtered.sort(key=lambda x: x.get(filters['sort_by'],''))
-
+    # ... your existing Coach Hub logic (filters, CSV, etc.) ...
     return render_template('index.html', coaches=filtered)
 
 @app.route('/activity')
 def activity():
-    # Stub analytics data
-    # Trend: last 7 days
-    trend = []
-    for i in range(7):
-        trend.append({
-            'date': f'Day-{7-i}',
-            'open_rate': round(random.uniform(20,80),1),
-            'click_rate': round(random.uniform(5,30),1),
-            'bounce_count': random.randint(0,5)
-        })
-    # Top subjects
-    subjects = [
-        {'subject': 'Quick Question','count': random.randint(20,100)},
-        {'subject': 'Opportunity for you','count': random.randint(20,100)},
-        {'subject': 'Let’s connect','count': random.randint(20,100)},
-    ]
-    # Geo data
-    geo = [
-        {'name':'New York, USA','lat':40.7,'lng':-74,'clicks':random.randint(0,50)},
-        {'name':'London, UK','lat':51.5,'lng':-0.1,'clicks':random.randint(0,50)},
-        {'name':'Sydney, AUS','lat':-33.9,'lng':151.2,'clicks':random.randint(0,50)},
-    ]
-    analytics = {'trend':trend,'subjects':subjects,'geo':geo}
+    # ... your existing Email Hub logic ...
     return render_template('activity.html', analytics=analytics)
 
-def _parse_csv(csv_file):
-    text = csv_file.stream.read().decode('utf-8').splitlines()
-    reader = csv.DictReader(text)
-    out=[]
-    for idx,row in enumerate(reader):
-        out.append({
-            'id': idx,
-            'name': row.get('name','').strip(),
-            'email': row.get('email','').strip(),
-            'experience': float(row.get('experience') or 0),
-            'rating': float(row.get('rating') or 0),
-            'distance': float(row.get('distance') or 0),
+@app.route('/dashboard')
+def dashboard():
+    """
+    Dashboard: show globe points for each coach with open/bounce stats,
+    and a list of coaches who opened.
+    """
+    # Stub: generate 20 coaches at random world coords with random open/bounce
+    coaches = []
+    for i in range(20):
+        coaches.append({
+            'name':    f'Coach {i+1}',
+            'lat':     random.uniform(-60,80),
+            'lng':     random.uniform(-180,180),
+            'open_count':   random.randint(0,10),
+            'bounce_count': random.randint(0,3)
         })
-    return out
+    return render_template('dashboard.html', coaches=coaches)
 
-def _fetch_coaches_from_apollo(filters):
-    """
-    Replace with real Apollo call, using filters dict.
-    Here we stub 9 random coaches.
-    """
-    sample = []
-    for i in range(1,10):
-        sample.append({
-            'id': i,
-            'name': f'Coach {i}',
-            'email': f'coach{i}@example.com',
-            'experience': random.randint(1,15),
-            'rating': round(random.uniform(3,5),1),
-            'distance': random.randint(1,100)
-        })
-    return sample
+def _parse_csv(csv_file):
+    # ... your existing parser ...
+    pass
+
+def _fetch_coaches_from_apollo(filters=None):
+    # ... your existing Apollo stub ...
+    pass
 
 if __name__=='__main__':
     port = int(os.getenv('PORT',5000))
